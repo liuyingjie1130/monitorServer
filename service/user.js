@@ -27,7 +27,7 @@ async function findUser(name, password) {
 }
 async function registerUser(name, password) {
  let key = 'user_name,user_Password';
- let val = `'${name}','${password}'`
+ let val = `('${name}','${password}')`
  return query(INSERT_TABLE('user',{key,val})).then(res => {
  if (res.affectedRows == 1) {
  return { msg: "注册成功", code: 200 }

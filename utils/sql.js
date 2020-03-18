@@ -7,16 +7,16 @@ const CREATE_TABLE = `CREATE TABLE IF NOT EXISTS user(
 );`.replace(/[\r\n]/g, '')
 
 // 查询数据表
-const QUERY_TABLE = (tableName,conditions) => `SELECT * FROM ${tableName} ${conditions}`
+const QUERY_TABLE = (tableName,conditions) => `SELECT * FROM ${tableName} ${conditions?conditions:''}`
 
 // 插入数据
-const INSERT_TABLE = (tableName, {key, val}) => `INSERT INTO ${tableName}(${key}) VALUES (${val})`
+const INSERT_TABLE = (tableName, {key, val}) => `INSERT INTO ${tableName}(${key}) VALUES ${val}`
 
 // 更新数据
-const UPDATE_TABLE = (tableName, {primaryKey, primaryVal}, {key, value}) => `UPDATE ${tableName} SET ${key}=${val} WHERE(${primaryKey}=${primaryVal});`
+const UPDATE_TABLE = (tableName, {primaryKey, primaryVal}, upd) => `UPDATE ${tableName} SET ${upd} WHERE ${primaryKey}=${primaryVal};`
 
 // 删除数据
-const DELETE_TABLE = (tableName, {primaryKey, primaryVal}) => `DELETE FROM user WHERE(${primaryKey}=${primaryVal});`
+const DELETE_TABLE = (tableName, {key, val}) => `DELETE FROM ${tableName} WHERE(${key}=${val});`
 
 module.exports = {
     CREATE_TABLE,
