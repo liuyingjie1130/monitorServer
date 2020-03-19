@@ -1,4 +1,3 @@
-//Koa2/service/user.js
 const { query } = require('../utils/query')
 const {
   CREATE_TABLE,
@@ -15,6 +14,16 @@ async function getList(queryKey) {
         res => {
             console.log(res,'res')
             return{ code:200,msg:'模板查询成功',data:res}
+        }
+    )
+}
+async function getParamList(id){
+    console.log(id,'mysql')
+    const condition = `where templateId='${id}'`
+    return query(QUERY_TABLE('paramByTemplate',condition)).then(
+        res => {
+            console.log(res,'res')
+            return{ code:200,msg:'模板参数查询成功',data:res}
         }
     )
 }
@@ -84,6 +93,7 @@ async function update(id,name,description,kind,paramList) {
 }
 module.exports = {
  getList,
+ getParamList,
  add,
  del,
  update
