@@ -59,7 +59,7 @@ async function add(name,description,kind,paramList) {
                 val.push(valOne)
             });
             
-            return query(INSERT_TABLE('paramByTemplate',{key,val:val.join(',')})).then(res=>{
+            return paramList.length==0?{ code:200,msg:'模板添加成功',data:templateId}:query(INSERT_TABLE('paramByTemplate',{key,val:val.join(',')})).then(res=>{
                 return{ code:200,msg:'模板添加成功',data:templateId}
             })
         }

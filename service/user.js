@@ -9,6 +9,7 @@ const {
 } = require('../utils/sql')
 async function checkUser(name, password) {
  return query(QUERY_TABLE('user',`where user_name ='${name}' and user_password='${password}'`)).then(res => {
+   console.log(res,'res')
  if (res.length == 1 && res[0].user_name === name && res[0].user_password === password) {
  return { msg: "登陆成功", code: 200 }
  } else {
