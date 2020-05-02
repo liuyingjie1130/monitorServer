@@ -12,7 +12,7 @@ async function getList(queryKey) {
     const condition = queryKey?`where name like '%${queryKey}%'`:''
     return query(QUERY_TABLE('template',condition)).then(
         res => {
-            console.log(res,'res')
+            // console.log(res,'res')
             return{ code:200,msg:'模板查询成功',data:res}
         }
     )
