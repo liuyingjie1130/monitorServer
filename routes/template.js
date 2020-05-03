@@ -2,9 +2,10 @@ var router = require('koa-router')();
 
 
 const controller = require("../controller/template")
-// const KoaBody = require('koa-body')({multipart:true})
-const bodyparser = require('koa-bodyparser')()
+const bodyparser = require('koa-body')({multipart:true})
+// const bodyparser = require('koa-bodyparser')()
 router.get("/list",bodyparser,controller.list)
+router.get("/list/:id",bodyparser,controller.getTemplateById)
 router.get("/param/list/:id",bodyparser,controller.paramList)
 router.post("/add",bodyparser,controller.add)
 router.post("/delete",bodyparser,controller.del)

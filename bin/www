@@ -2,12 +2,14 @@
 var app = require('../app');
 var debug = require('debug')('demo:server');
 var http = require('http');
+var redis = require('redis')
+var REDIS_CONFIG = require('../config/redis_config') // 数据库配置
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(process.env.PORT || '3001');
 // app.set('port', port);
 
 /**
@@ -15,15 +17,58 @@ var port = normalizePort(process.env.PORT || '3000');
  */
 
 var server = http.createServer(app.callback());
-
+var io = require('socket.io').listen(server)
 /**
  * Listen on provided port, on all network interfaces.
  */
 
+ 
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
+
+// SocketIO
+let redisClient = redis.createClient(REDIS_CONFIG);
+// 模拟传感器发来的实时数据
+// setInterval(()=>{
+//     let timestamp = new Date().getTime();
+//     let arr = [];
+//     ["aa","bb","cc"].forEach((item)=>{
+//         arr.push({
+//             name:item,
+//             value:Math.random()*100,
+//             timestamp
+//         })
+//     })
+//     redisClient.set('current', JSON.stringify(arr), function(err, reply){
+//         console.log(" error?replay:" , err,reply);
+//     })
+//     // ["aa","bb","cc"].forEach((item)=>{
+//     //     redisClient.set(item, JSON.stringify({value:Math.random()*100,timestamp}), function(err, reply){
+//     //         console.log("set hum error:" + err,reply);
+//     //     })
+//     //     redisClient.expire(item, 50);//设置超时时间
+//     // })
+// },5000)
+
+
+io.on("connection",function (clientSocket) {
+    // socket.io 使用 emit(eventname,data) 发送消息，使用on(eventname,callback)监听消息
+    //监听客户端发送的 sendMsg 事件
+    clientSocket.on("clientMsg",function (data) {
+        // data 为客户端发送的消息，可以是 字符串，json对象或buffer
+        // 使用 emit 发送消息
+        // setInterval(()=>{
+            redisClient.get('current',function(err,data){
+              console.log(111)
+                clientSocket.emit("serverMsg",data);
+            })
+        // },5000)
+        
+        
+    })
+});
 /**
  * Normalize a port into a number, string, or false.
  */

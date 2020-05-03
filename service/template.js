@@ -12,7 +12,16 @@ async function getList(queryKey) {
     const condition = queryKey?`where name like '%${queryKey}%'`:''
     return query(QUERY_TABLE('template',condition)).then(
         res => {
-            console.log(res,'res')
+            // console.log(res,'res')
+            return{ code:200,msg:'模板查询成功',data:res}
+        }
+    )
+}
+async function getTemplateById(id) {
+    const condition = `where id ='${id}'`
+    return query(QUERY_TABLE('template',condition)).then(
+        res => {
+            // console.log(res,'res')
             return{ code:200,msg:'模板查询成功',data:res}
         }
     )
@@ -20,7 +29,7 @@ async function getList(queryKey) {
 async function getParamList(id){
     console.log(id,'mysql')
     const condition = `where templateId='${id}'`
-    return query(QUERY_TABLE('paramByTemplate',condition)).then(
+    return query(QUERY_TABLE('templateTags',condition)).then(
         res => {
             console.log(res,'res')
             return{ code:200,msg:'模板参数查询成功',data:res}
@@ -34,7 +43,7 @@ async function del(templateId) {
     return query(DELETE_TABLE('template',{key,val})).then(
         res => {
             // console.log(res,9090)
-            return query(DELETE_TABLE('paramByTemplate',{key:'templateId',val})).then(
+            return query(DELETE_TABLE('templateTags',{key:'templateId',val})).then(
                 res => {
                     // console.log(res,'res')
                     return{ code:200,msg:'模板删除成功',data:templateId}
@@ -52,14 +61,14 @@ async function add(name,description,kind,paramList) {
     return query(INSERT_TABLE('template',{key,val})).then(
         res => {
             let val=[];
-            let key = 'id,template,attrName,min,max,description,unit,templateId';
+            let key = 'id,temName,attrName,min,max,description,unit,templateId';
             paramList.forEach((item,index) => {
-                let {name,description,min,max,unit} = item;
-                let valOne = `('${uuid.v1()}','${templateName}','${name}',${min},${max},'${description}','${unit}','${templateId}')`
+                let {attrName,description,min,max,unit} = item;
+                let valOne = `('${uuid.v1()}','${templateName}','${attrName}',${min},${max},'${description}','${unit}','${templateId}')`
                 val.push(valOne)
             });
             
-            return query(INSERT_TABLE('paramByTemplate',{key,val:val.join(',')})).then(res=>{
+            return paramList.length==0?{ code:200,msg:'模板添加成功',data:templateId}:query(INSERT_TABLE('templateTags',{key,val:val.join(',')})).then(res=>{
                 return{ code:200,msg:'模板添加成功',data:templateId}
             })
         }
@@ -74,15 +83,15 @@ async function update(id,name,description,kind,paramList) {
     return query(UPDATE_TABLE('template',{primaryKey, primaryVal},upd)).then(
         res => {
             let k =0;
-            return query(DELETE_TABLE('paramByTemplate',{key:"templateId",val:templateId})).then(res=>{
-                let key = 'id,template,attrName,min,max,description,unit,templateId';
+            return query(DELETE_TABLE('templateTags',{key:"templateId",val:`'${templateId}'`})).then(res=>{
+                let key = 'id,temName,attrName,min,max,description,unit,templateId';
                 let val = [];
                  paramList.forEach((item,index) => {
-                    let {name,description,min,max,unit} = item;
-                    let valOne = `('${uuid.v1()}','${templateName}','${name}',${min},${max},'${description}','${unit}','${templateId}')`
+                    let {attrName,description,min,max,unit} = item;
+                    let valOne = `('${uuid.v1()}','${templateName}','${attrName}',${min},${max},'${description}','${unit}','${templateId}')`
                     val.push(valOne)                    
                 });
-                return query(INSERT_TABLE('paramByTemplate',{key,val:val.join(',')})).then(res=>{
+                return query(INSERT_TABLE('templateTags',{key,val:val.join(',')})).then(res=>{
                     return{ code:200,msg:'模板修改成功',data:templateId}
                 })
             })
@@ -93,6 +102,7 @@ async function update(id,name,description,kind,paramList) {
 }
 module.exports = {
  getList,
+ getTemplateById,
  getParamList,
  add,
  del,

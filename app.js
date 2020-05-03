@@ -6,6 +6,7 @@ const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 const cors = require('koa2-cors')
+const jwt = require('koa-jwt')
 
 const index = require('./routes/index')
 const users = require('./routes/users')
@@ -34,6 +35,7 @@ const _json=async (ctx,next)=>{
   }
 }
 
+
 // app.use(_json)
 
 // error handler
@@ -41,6 +43,21 @@ onerror(app)
 
 // middlewares
 // app.use(bodyparser())
+app.use(async (ctx, next) => {
+  await next().catch((err) => {
+    if (err.status === 401) {
+      ctx.status = 401;
+      ctx.body = {
+        data: null,
+        message: 'token无效',
+        code: 401
+      };
+    } else {
+      throw err;
+    }
+  });
+});
+app.use(jwt({secret:'LZC'}).unless({path: ["/api/v1/login","api/v1/register"]}));
 app.use(json())
 app.use(logger())
 app.use(require('koa-static')(__dirname + '/public'))
