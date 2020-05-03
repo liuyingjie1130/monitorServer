@@ -1,6 +1,12 @@
 const template = require("../service/template")
 async function list(ctx,next){//带模糊查询
-    let data = await template.getList(ctx.query.query)//ctx.query 获取对象格式的query参数(get请求)
+    console.log(ctx.query.query,88)
+    let key = ctx.query.query?JSON.parse(ctx.query.query).key:''
+    let data = await template.getList(key)//ctx.query 获取对象格式的query参数(get请求)
+    return ctx.response.body = data
+}
+async function getTemplateById(ctx,next){
+    let data = await template.getTemplateById(ctx.params.id)//ctx.query 获取对象格式的query参数(get请求)
     return ctx.response.body = data
 }
 async function paramList(ctx,next){
@@ -26,6 +32,7 @@ async function update(ctx,next){
 }
 module.exports={
  list,
+ getTemplateById,
  paramList,
  add,
  del,
