@@ -10,6 +10,9 @@ const cors = require('koa2-cors')
 const index = require('./routes/index')
 const users = require('./routes/users')
 const template = require('./routes/template')
+const alert = require('./routes/alert')
+const tags = require('./routes/tags')
+const history = require('./routes/history')
 
 
 const _json=async (ctx,next)=>{
@@ -58,6 +61,9 @@ app.use(async (ctx, next) => {
 app.use(index.routes(), index.allowedMethods())
 app.use(users.routes(), users.allowedMethods())
 app.use(template.routes(), users.allowedMethods())
+app.use(alert.routes(), users.allowedMethods())
+app.use(tags.routes(), users.allowedMethods())
+app.use(history.routes(), users.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {
