@@ -11,6 +11,7 @@ const jwt = require('koa-jwt')
 const index = require('./routes/index')
 const users = require('./routes/users')
 const template = require('./routes/template')
+const site = require('./routes/site')
 
 
 const _json=async (ctx,next)=>{
@@ -74,7 +75,9 @@ app.use(async (ctx, next) => {
 // routes
 app.use(index.routes(), index.allowedMethods())
 app.use(users.routes(), users.allowedMethods())
-app.use(template.routes(), users.allowedMethods())
+app.use(template.routes(), template.allowedMethods())
+app.use(site.routes(), site.allowedMethods())
+
 
 // error-handling
 app.on('error', (err, ctx) => {
