@@ -7,6 +7,14 @@ const {
   UPDATE_TABLE,
   DELETE_TABLE
 } = require('../utils/sql')
+async function match() {
+    let data=[];
+    return query(QUERY_TABLE('tags')).then(res => {
+        if(res.length){
+            return { code: 200,msg: "查询成功",data:res}
+        }
+    })
+}
 async function matchKind(kind) {
     let data=[];
     return query(QUERY_TABLE('tags',`where kind = '${kind}'`)).then(res => {
@@ -64,6 +72,7 @@ async function matchThree(kind,site,attr) {
     })
 }
 module.exports = {
+    match,
     matchKind,
     matchSite,
     matchAttr,
