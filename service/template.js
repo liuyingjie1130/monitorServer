@@ -104,7 +104,7 @@ async function update(id,name,description,kind,paramList) {
                     let valOne = `('${uuid.v1()}','${templateName}','${attrName}',${min},${max},'${description}','${unit}','${templateId}')`
                     val.push(valOne)                    
                 });
-                return paramList.length==0?{ code:200,msg:'模板添加成功',data:templateId}:query(INSERT_TABLE('templateTags',{key,val:val.join(',')})).then(res=>{
+                return paramList.length==0?{ code:200,msg:'模板修改成功',data:templateId}:query(INSERT_TABLE('templateTags',{key,val:val.join(',')})).then(res=>{
                     return{ code:200,msg:'模板修改成功',data:templateId}
                 })
             })
