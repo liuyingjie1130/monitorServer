@@ -78,16 +78,12 @@ app.use(async (ctx, next) => {
 // routes
 app.use(index.routes(), index.allowedMethods())
 app.use(users.routes(), users.allowedMethods())
-<<<<<<< HEAD
-app.use(template.routes(), users.allowedMethods())
-app.use(alert.routes(), users.allowedMethods())
-app.use(tags.routes(), users.allowedMethods())
-app.use(history.routes(), users.allowedMethods())
-=======
 app.use(template.routes(), template.allowedMethods())
+app.use(alert.routes(), alert.allowedMethods())
+app.use(tags.routes(), tags.allowedMethods())
+app.use(history.routes(), history.allowedMethods())
 app.use(site.routes(), site.allowedMethods())
 
->>>>>>> remotes/origin/dev_zqy
 
 // error-handling
 app.on('error', (err, ctx) => {
