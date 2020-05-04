@@ -58,21 +58,34 @@ async function add(name,description,kind,paramList) {
     let templateId = uuid.v1();
     let templateName = name;
     let val = `('${templateId}','${name}','${description}','${kind}')`
-    return query(INSERT_TABLE('template',{key,val})).then(
+    // let isExit = false
+    console.log(paramList.length,66)
+    return query(QUERY_TABLE('template',`where name ='${name}'`)).then(
         res => {
-            let val=[];
-            let key = 'id,temName,attrName,min,max,description,unit,templateId';
-            paramList.forEach((item,index) => {
-                let {attrName,description,min,max,unit} = item;
-                let valOne = `('${uuid.v1()}','${templateName}','${attrName}',${min},${max},'${description}','${unit}','${templateId}')`
-                val.push(valOne)
-            });
-            
-            return paramList.length==0?{ code:200,msg:'模板添加成功',data:templateId}:query(INSERT_TABLE('templateTags',{key,val:val.join(',')})).then(res=>{
-                return{ code:200,msg:'模板添加成功',data:templateId}
-            })
+            // isExit = res.length!=0
+            if(res.length==0){
+
+                return query(INSERT_TABLE('template',{key,val})).then(
+                    res => {
+                        let val=[];
+                        let key = 'id,temName,attrName,min,max,description,unit,templateId';
+                        paramList.forEach((item,index) => {
+                            let {attrName,description,min,max,unit} = item;
+                            let valOne = `('${uuid.v1()}','${templateName}','${attrName}',${min},${max},'${description}','${unit}','${templateId}')`
+                            val.push(valOne)
+                        });
+                        console.log(paramList.length,66)
+                        return paramList.length==0?{ code:200,msg:'模板添加成功',data:templateId}:query(INSERT_TABLE('templateTags',{key,val:val.join(',')})).then(res=>{
+                            return{ code:200,msg:'模板添加成功',data:templateId}
+                        })
+                    }
+                )
+            }else{
+                return {code:5,msg:'模板已经存在'}
+            }
         }
     )
+    
 }
 async function update(id,name,description,kind,paramList) {
     console.log(id,name,description,kind,paramList,'mysql')
@@ -91,7 +104,7 @@ async function update(id,name,description,kind,paramList) {
                     let valOne = `('${uuid.v1()}','${templateName}','${attrName}',${min},${max},'${description}','${unit}','${templateId}')`
                     val.push(valOne)                    
                 });
-                return query(INSERT_TABLE('templateTags',{key,val:val.join(',')})).then(res=>{
+                return paramList.length==0?{ code:200,msg:'模板添加成功',data:templateId}:query(INSERT_TABLE('templateTags',{key,val:val.join(',')})).then(res=>{
                     return{ code:200,msg:'模板修改成功',data:templateId}
                 })
             })
