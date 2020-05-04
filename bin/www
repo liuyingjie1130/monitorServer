@@ -4,6 +4,14 @@ var debug = require('debug')('demo:server');
 var http = require('http');
 var redis = require('redis')
 var REDIS_CONFIG = require('../config/redis_config') // 数据库配置
+const { query } = require('../utils/query')
+const {
+  CREATE_TABLE,
+  QUERY_TABLE,
+  INSERT_TABLE,
+  UPDATE_TABLE,
+  DELETE_TABLE
+} = require('../utils/sql')
 
 /**
  * Get port from environment and store in Express.
@@ -29,7 +37,7 @@ server.on('listening', onListening);
 
 
 // SocketIO
-let redisClient = redis.createClient(REDIS_CONFIG);
+// let redisClient = redis.createClient(REDIS_CONFIG);
 // 模拟传感器发来的实时数据
 // setInterval(()=>{
 //     let timestamp = new Date().getTime();
@@ -57,14 +65,37 @@ io.on("connection",function (clientSocket) {
     // socket.io 使用 emit(eventname,data) 发送消息，使用on(eventname,callback)监听消息
     //监听客户端发送的 sendMsg 事件
     clientSocket.on("clientMsg",function (data) {
+      console.log(data,121)
+      let searchValue = data.searchValue
         // data 为客户端发送的消息，可以是 字符串，json对象或buffer
         // 使用 emit 发送消息
-        // setInterval(()=>{
-            redisClient.get('current',function(err,data){
-              console.log(111)
-                clientSocket.emit("serverMsg",data);
-            })
-        // },5000)
+        
+        setInterval(()=>{
+          const condition = searchValue?`where name like '%${searchValue}%'`:''
+          let rt = []
+          query(QUERY_TABLE('tags',condition)).then(
+            res => {
+              if(res.length){
+                let name = [];
+                res.map(item=>name.push(item.name))
+                name.map((item,index)=>{
+                  query('SELECT * FROM `'+item+'`').then(
+                    res => {
+                      // console.log(res[res.length-1],'res')
+                      rt.push(res[res.length-1])
+                      // console.log(rt,22)
+                      if(rt.length == name.length){
+
+                        clientSocket.emit("serverMsg",rt);
+                      }
+                    }
+                  )
+                })
+              }
+            }
+          )
+               
+        },10000)
         
         
     })
