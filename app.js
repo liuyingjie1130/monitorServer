@@ -11,6 +11,10 @@ const jwt = require('koa-jwt')
 const index = require('./routes/index')
 const users = require('./routes/users')
 const template = require('./routes/template')
+const alert = require('./routes/alert')
+const tags = require('./routes/tags')
+const history = require('./routes/history')
+const site = require('./routes/site')
 
 
 const _json=async (ctx,next)=>{
@@ -74,7 +78,16 @@ app.use(async (ctx, next) => {
 // routes
 app.use(index.routes(), index.allowedMethods())
 app.use(users.routes(), users.allowedMethods())
+<<<<<<< HEAD
 app.use(template.routes(), users.allowedMethods())
+app.use(alert.routes(), users.allowedMethods())
+app.use(tags.routes(), users.allowedMethods())
+app.use(history.routes(), users.allowedMethods())
+=======
+app.use(template.routes(), template.allowedMethods())
+app.use(site.routes(), site.allowedMethods())
+
+>>>>>>> remotes/origin/dev_zqy
 
 // error-handling
 app.on('error', (err, ctx) => {
