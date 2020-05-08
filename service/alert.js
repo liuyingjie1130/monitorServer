@@ -7,11 +7,23 @@ const {
   UPDATE_TABLE,
   DELETE_TABLE
 } = require('../utils/sql')
+async function match() {
+    let data=[];
+    return query(QUERY_TABLE('alert')).then(res => {
+        if(res.length){
+            return { code: 200,msg: "查询成功",data:res}
+        }else{
+            return { code: 200,msg: "查询成功",data:[]}
+        }
+    })
+}
 async function matchKind(kind) {
     let data=[];
     return query(QUERY_TABLE('alert',`where kind = '${kind}'`)).then(res => {
         if(res.length){
             return { code: 200,msg: "查询成功",data:res}
+        }else{
+            return { code: 200,msg: "查询成功",data:[]}
         }
     })
 }
@@ -20,6 +32,8 @@ async function matchSite(site) {
     return query(QUERY_TABLE('alert',`where site = '${site}'`)).then(res => {
         if(res.length){
             return { code: 200,msg: "查询成功",data:res}
+        }else{
+            return { code: 200,msg: "查询成功",data:[]}
         }
     })
 }
@@ -28,14 +42,18 @@ async function matchAttr(attr) {
     return query(QUERY_TABLE('alert',`where attr = '${attr}'`)).then(res => {
         if(res.length){
             return { code: 200,msg: "查询成功",data:res}
+        }else{
+            return { code: 200,msg: "查询成功",data:[]}
         }
     })
 }
-async function matchTime(time) {
+async function matchTime(start,end) {
     let data=[];
-    return query(QUERY_TABLE('alert',`where time = '${time}'`)).then(res => {
+    return query(QUERY_TABLE('alert',`where time between '${start}' and '${end}'`)).then(res => {
         if(res.length){
             return { code: 200,msg: "查询成功",data:res}
+        }else{
+            return { code: 200,msg: "查询成功",data:[]}
         }
     })
 }
@@ -44,14 +62,18 @@ async function matchKS(kind,site) {
     return query(QUERY_TABLE('alert',`where kind = '${kind}'and site = '${site}'`)).then(res => {
         if(res.length){
             return { code: 200,msg: "查询成功",data:res}
+        }else{
+            return { code: 200,msg: "查询成功",data:[]}
         }
     })
 }
-async function matchKT(kind,time) {
+async function matchKT(kind,start,end) {
     let data=[];
-    return query(QUERY_TABLE('alert',`where kind = '${kind}'and time = '${time}'`)).then(res => {
+    return query(QUERY_TABLE('alert',`where time between '${start}' and '${end}'and kind = '${kind}'`)).then(res => {
         if(res.length){
             return { code: 200,msg: "查询成功",data:res}
+        }else{
+            return { code: 200,msg: "查询成功",data:[]}
         }
     })
 }
@@ -60,14 +82,18 @@ async function matchKA(kind,attr) {
     return query(QUERY_TABLE('alert',`where kind = '${kind}' and attr = '${attr}'`)).then(res => {
         if(res.length){
             return { code: 200,msg: "查询成功",data:res}
+        }else{
+            return { code: 200,msg: "查询成功",data:[]}
         }
     })
 }
-async function matchST(site,time) {
+async function matchST(site,start,end) {
     let data=[];
-    return query(QUERY_TABLE('alert',`where time = '${time}'and site = '${site}'`)).then(res => {
+    return query(QUERY_TABLE('alert',`where time between '${start}'and '${end}'and site = '${site}'`)).then(res => {
         if(res.length){
             return { code: 200,msg: "查询成功",data:res}
+        }else{
+            return { code: 200,msg: "查询成功",data:[]}
         }
     })
 }
@@ -76,58 +102,72 @@ async function matchSA(site,attr) {
     return query(QUERY_TABLE('alert',`where site = '${site}' and attr = '${attr}'`)).then(res => {
         if(res.length){
             return { code: 200,msg: "查询成功",data:res}
+        }else{
+            return { code: 200,msg: "查询成功",data:[]}
         }
     })
 }
-async function matchAT(attr,time) {
+async function matchAT(attr,start,end) {
     let data=[];
-    return query(QUERY_TABLE('alert',`where time = '${time}' and attr = '${attr}'`)).then(res => {
+    return query(QUERY_TABLE('alert',`where time between '${start}'and '${end}' and attr = '${attr}'`)).then(res => {
         if(res.length){
             return { code: 200,msg: "查询成功",data:res}
+        }else{
+            return { code: 200,msg: "查询成功",data:[]}
         }
     })
 }
 async function matchKAS(kind,site,attr) {
     let data=[];
-    return query(QUERY_TABLE('alert',`where kind = '${kind}'and site = '${site}' and attr = '${attr}'`)).then(res => {
+    return query(QUERY_TABLE('alert',`where name='${kind}.${site}.${attr}'`)).then(res => {
+        if(res.length){
+            return { code: 200,msg: "查询成功",data:res}
+        }
+        // else{
+        //     return { code: 200,msg: "查询成功",data:[]}
+        // }
+    })
+}
+async function matchKAT(kind,attr,start,end) {
+    let data=[];
+    return query(QUERY_TABLE('alert',`where time between '${start}'and '${end}'and kind = '${kind}'and attr = '${attr}'`)).then(res => {
+        if(res.length){
+            return { code: 200,msg: "查询成功",data:res}
+        }else{
+            return { code: 200,msg: "查询成功",data:[]}
+        }
+    })
+}
+async function matchKST(kind,site,start,end) {
+    let data=[];
+    return query(QUERY_TABLE('alert',`where time between '${start}'and '${end}'and kind = '${kind}'and site = '${site}'`)).then(res => {
         if(res.length){
             return { code: 200,msg: "查询成功",data:res}
         }
     })
 }
-async function matchKAT(kind,attr,time) {
+async function matchAST(attr,site,start,end) {
     let data=[];
-    return query(QUERY_TABLE('alert',`where kind = '${kind}'and attr = '${attr}' and time = '${time}'`)).then(res => {
+    return query(QUERY_TABLE('alert',`where time between '${start}'and '${end}'and attr = '${attr}'and site = '${site}'`)).then(res => {
         if(res.length){
             return { code: 200,msg: "查询成功",data:res}
+        }else{
+            return { code: 200,msg: "查询成功",data:[]}
         }
     })
 }
-async function matchKST(kind,site,time) {
+async function matchFour(start,end,kind,site,attr) {
     let data=[];
-    return query(QUERY_TABLE('alert',`where kind = '${kind}'and site = '${site}' and time = '${time}'`)).then(res => {
+    return query(QUERY_TABLE('alert',`where time between '${start}'and '${end}'and name='${kind}.${site}.${attr}'`)).then(res => {
         if(res.length){
             return { code: 200,msg: "查询成功",data:res}
-        }
-    })
-}
-async function matchAST(attr,site,time) {
-    let data=[];
-    return query(QUERY_TABLE('alert',`where attr = '${attr}'and site = '${site}' and time = '${time}'`)).then(res => {
-        if(res.length){
-            return { code: 200,msg: "查询成功",data:res}
-        }
-    })
-}
-async function matchFour(kind,attr,site,time) {
-    let data=[];
-    return query(QUERY_TABLE('alert',`where kind = '${kind}'and attr = '${attr}'and site = '${site}' and time = '${time}'`)).then(res => {
-        if(res.length){
-            return { code: 200,msg: "查询成功",data:res}
+        }else{
+            return { code: 200,msg: "查询成功",data:[]}
         }
     })
 }
 module.exports = {
+    match,
     matchKind,
     matchSite,
     matchAttr,
