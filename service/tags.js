@@ -21,6 +21,7 @@ async function matchKind(kind) {
         if(res.length){
             return { code: 200,msg: "查询成功",data:res}
         }
+        else return { code: 200,msg: "查询成功",data:[]}
     })
 }
 async function matchSite(site) {
@@ -29,6 +30,7 @@ async function matchSite(site) {
         if(res.length){
             return { code: 200,msg: "查询成功",data:res}
         }
+        else return { code: 200,msg: "查询成功",data:[]}
     })
 }
 async function matchAttr(attr) {
@@ -37,6 +39,7 @@ async function matchAttr(attr) {
         if(res.length){
             return { code: 200,msg: "查询成功",data:res}
         }
+        else return { code: 200,msg: "查询成功",data:[]}
     })
 }
 async function matchKS(kind,site) {
@@ -45,6 +48,7 @@ async function matchKS(kind,site) {
         if(res.length){
             return { code: 200,msg: "查询成功",data:res}
         }
+        else return { code: 200,msg: "查询成功",data:[]}
     })
 }
 async function matchKA(kind,attr) {
@@ -53,6 +57,7 @@ async function matchKA(kind,attr) {
         if(res.length){
             return { code: 200,msg: "查询成功",data:res}
         }
+        else return { code: 200,msg: "查询成功",data:[]}
     })
 }
 async function matchSA(site,attr) {
@@ -61,6 +66,7 @@ async function matchSA(site,attr) {
         if(res.length){
             return { code: 200,msg: "查询成功",data:res}
         }
+        else return { code: 200,msg: "查询成功",data:[]}
     })
 }
 async function matchThree(kind,site,attr) {
@@ -69,6 +75,7 @@ async function matchThree(kind,site,attr) {
         if(res.length){
             return { code: 200,msg: "查询成功",data:res}
         }
+        else return { code: 200,msg: "查询成功",data:[]}
     })
 }
 module.exports = {
